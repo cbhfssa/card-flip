@@ -1,0 +1,54 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Write supabase-config.js from secrets
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_ANON_KEY" ]; then
+            echo "Missing GitHub secrets SUPABASE_URL or SUPABASE_ANON_KEY"
+            exit 1
+          fi
+          python3 -c 'import json, os, pathlib; pathlib.Path("supabase-config.js").write_text("window.SUPABASE_URL = " + json.dumps(os.environ["SUPABASE_URL"]) + ";\nwindow.SUPABASE_ANON_KEY = " + json.dumps(os.environ["SUPABASE_ANON_KEY"]) + ";\n", encoding="utf-8")'
+
+      - name: Prepare site
+        run: |
+          mkdir -p site
+          cp index.html style.css game.js supabase-config.js site/
+          touch site/.nojekyll
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
