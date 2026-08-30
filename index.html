@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>카드 뒤집기</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&family=Playfair+Display:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="stage">
+      <div class="board">
+        <canvas id="game" width="560" height="640" tabindex="0" role="application" aria-label="카드 뒤집기 게임">
+          이 브라우저는 Canvas API를 지원하지 않습니다.
+        </canvas>
+        <section id="leaderboard" class="leaderboard" aria-live="polite">
+          <div class="leaderboard-head">
+            <h2>리더보드 <span>(최소 시도 TOP 5)</span></h2>
+            <button id="mute-sound" class="mute" type="button" aria-pressed="false" aria-label="효과음 끄기">♪</button>
+          </div>
+          <ol id="leaderboard-list"></ol>
+        </section>
+      </div>
+      <section id="result" class="result" hidden>
+        <h2>짝을 모두 맞췄어요!</h2>
+        <p id="result-summary" class="result-summary"></p>
+        <label class="result-label" for="player-name">닉네임</label>
+        <input id="player-name" type="text" maxlength="24" placeholder="익명" autocomplete="nickname" />
+        <button id="save-score" type="button">점수 저장</button>
+        <p id="save-status" class="save-status" aria-live="polite"></p>
+        <button id="play-again" type="button">한 판 더</button>
+      </section>
+      <p id="status" class="sr-only" aria-live="polite">카드를 눌러 짝을 맞추세요.</p>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="game.js"></script>
+  </body>
+</html>
