@@ -4,3 +4,6 @@ desktop.ini
 *.log
 .vscode/
 .idea/
+.env
+.env.*
+supabase-config.js

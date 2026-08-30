@@ -24,8 +24,8 @@ const NAME_KEY = "card-flip-player-name";
 const MUTE_KEY = "card-flip-muted";
 const FONT = "'IBM Plex Sans KR', 'Malgun Gothic', sans-serif";
 const DISPLAY = "'Playfair Display', 'Times New Roman', serif";
-const SUPABASE_URL = "https://xtzzhxytfgngurmvfiwi.supabase.co";
-const SUPABASE_KEY = "sb_publishable_e2rbJxUMqz4hhxic76LWDQ_MFYIGNxQ";
+const SUPABASE_URL = window.SUPABASE_URL || "";
+const SUPABASE_KEY = window.SUPABASE_ANON_KEY || "";
 
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
@@ -39,9 +39,10 @@ const leaderboardListEl = document.getElementById("leaderboard-list");
 const playAgainBtn = document.getElementById("play-again");
 const muteBtn = document.getElementById("mute-sound");
 
-const db = window.supabase
-  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
-  : null;
+const db =
+  window.supabase && SUPABASE_URL && SUPABASE_KEY
+    ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
+    : null;
 
 const sound = {
   ctx: null,
@@ -361,7 +362,7 @@ async function saveScore() {
   }
 
   if (!db) {
-    saveStatusEl.textContent = "저장할 수 없습니다. 게임실행.bat으로 다시 열어 주세요.";
+    saveStatusEl.textContent = "저장할 수 없습니다. supabase-config.js를 확인해 주세요.";
     return;
   }
 
